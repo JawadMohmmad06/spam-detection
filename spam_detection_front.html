@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spam Detection</title>
+</head>
+<body>
+    <h1>Check Spam Or Not</h1>
+    <form id="spamornotFrom">
+        <textarea id="spamornot" name="spamornot" rows="4" cols="50" required></textarea>
+
+        <button type="submit">Submit</button>
+    </form>
+    <p id="response"></p>
+
+    <script>
+        document.getElementById('spamornotFrom').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const spamornot = document.getElementById('spamornot').value;
+            const ip="http://127.0.0.1:8000/"
+            try {
+                const response = await fetch(ip+'spamornot/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ spam: spamornot })
+                });
+
+                if (response.ok) {
+                    const responseData = await response.text();
+                    document.getElementById('response').innerText = `Result: ${responseData}`;
+                } else {
+                    document.getElementById('response').innerText = 'Error: ' + response.statusText;
+                }
+            } catch (error) {
+                document.getElementById('response').innerText = 'Error: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>
